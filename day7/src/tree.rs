@@ -27,39 +27,31 @@ impl Node {
             new_value.parse::<i64>().unwrap()
         )));
     }
-    pub fn build_tree(&mut self,numbers:Vec<i64>,target:i64){
-        if !numbers.is_empty(){
+    pub fn build_tree(&mut self,numbers:Vec<i64>,target:i64,use_middle:bool)->bool{
             
-
-            let number = numbers[0];
-            self.insert_left(number);
-            self.insert_right(number);
-            self.insert_middle(number);
-            if let Some(l)  = &mut self.left {
-                l.build_tree(numbers[1..].to_vec(),target); 
-            }
-            if let Some(r) = &mut self.right {
-                r.build_tree(numbers[1..].to_vec(),target);
-            }
-            if let Some(m) = &mut self.middle {
-                m.build_tree(numbers[1..].to_vec(),target);
-            }
-        }
-    }
-    pub fn search_lr(&self, target: i64) -> bool {
         
-        if self.value == target && self.right.is_none() && self.left.is_none() {
-            return true;
+        if numbers.is_empty(){
+            if self.value==target{
+                return true
+            }else{
+                return false;    
+            }
+            
+        }else{
+            if self.value > target{
+                return false;
+            }
         }
-        self.left.as_deref().map_or(false, |l| l.search_lr(target)) ||
-        self.right.as_deref().map_or(false, |r| r.search_lr(target))
-    }
-    pub fn search(&self, target: i64) -> bool {
-        if self.value == target && self.left.is_none() && self.right.is_none() && self.middle.is_none() {
-            return true;
+        let number = numbers[0];
+        self.insert_left(number);
+        self.insert_right(number);
+        if use_middle{
+            self.insert_middle(number);
         }
-        self.left.as_deref().map_or(false, |l| l.search(target)) ||
-        self.middle.as_deref().map_or(false, |m| m.search(target)) ||
-        self.right.as_deref().map_or(false, |r| r.search(target))
+        
+        
+        self.left.as_deref_mut().map_or(false, | l| l.build_tree(numbers[1..].to_vec(), target, use_middle)) ||
+        self.right.as_deref_mut().map_or(false, |r| r.build_tree(numbers[1..].to_vec(), target, use_middle)) ||
+        self.middle.as_deref_mut().map_or(false, |m| m.build_tree(numbers[1..].to_vec(), target, use_middle))
     }
 }

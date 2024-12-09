@@ -7,16 +7,12 @@ use tree::Node;
 fn can_reach_target_with_concat(numbers:Vec<i64>,target:i64)->bool{
     let mut tree = Node::new(numbers[0]);
     
-    tree.build_tree(numbers[1..].to_vec(),target);
-    let result = tree.search(target);
-    result
+    tree.build_tree(numbers[1..].to_vec(),target,true)
+    
 }
 fn can_reach_target(numbers:Vec<i64>,target:i64)->bool{
     let mut tree = Node::new(numbers[0]);
-    
-    tree.build_tree(numbers[1..].to_vec());
-    let result = tree.search_lr(target);
-    result
+    tree.build_tree(numbers[1..].to_vec(),target,false)
 }
 
 fn main() {
